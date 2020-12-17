@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    docker = {
+      source = "kreuzwerker/docker"
+    }
+  }
+}
+
 provider "docker" {
   host = "unix:///var/run/docker.sock"
 }
@@ -7,22 +15,21 @@ resource "docker_image" "app_image" {
 }
 
 resource "docker_container" "app" {
-  count = "${var.container_count}"
-  name = "nginx-server-${count.index+1}"
-  image = "${docker_image.app_image.latest}"
+  name = "petclinic-dev"
+  image = docker_image.app_image.latest
   ports {
-    internal = 80
+    internal = 8080
+    external = 9966
   }
-  env {
+}
 
-  }
+resource "local_file" "mysql_data" {
+    filename = "/mysql/data"
 }
 
 resource "docker_image" "mysql" {
   name = "mysql:8"
 }
-
-
 
 resource "random_password" "mysql_root_password" {
   length = 16
@@ -32,10 +39,6 @@ output "my_password" {
   value = random_password.mysql_root_password.result
 }
 
-resource "local_file" "mysql_data" {
-    filename = "/mysql/data"
-}
-
 #  lifecycle {
 #    ignore_changes = ["plaintext_password"]
 #  }
@@ -43,11 +46,11 @@ resource "local_file" "mysql_data" {
 resource "docker_container" "mysql" {
   name = "mysql"
   image = "${docker_image.mysql.latest}"
-  env {
-    MYSQL_ROOT_PASSWORD = "${random_password.mysql_root_password.result}"
-  }
+  env = [
+    "MYSQL_ROOT_PASSWORD=${random_password.mysql_root_password.result}"
+  ]
   mounts {
-    source = "${local_file.mysql_data}"
+    source = local_file.mysql_data.filename
     target = "/var/lib/mysql/data"
     type = "bind"
   }
