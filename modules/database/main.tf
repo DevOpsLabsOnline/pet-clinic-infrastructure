@@ -1,3 +1,15 @@
+terraform {
+  required_providers {
+    docker = {
+      source = "kreuzwerker/docker"
+    }
+  }
+}
+
+provider "docker" {
+  host = "unix:///var/run/docker.sock"
+}
+
 resource "docker_image" "mysql" {
   name = "mysql:8"
 }
@@ -18,8 +30,8 @@ resource "docker_container" "mysql" {
     "MYSQL_DATABASE=petclinic"
   ]
   mounts {
-    source = local_file.mysql_data.filename
-    target = "/var/lib/mysql/data"
+    source = "/var/lib/mysql"
+    target = "/var/lib/mysql"
     type = "bind"
   }
   ports {
@@ -27,6 +39,6 @@ resource "docker_container" "mysql" {
     external = 3306
   }
   networks_advanced {
-    name = docker_network.private_network.id
+    name = "petclinic-network"
   }
 }

@@ -1,5 +1,9 @@
-module "app_and_db" {
-  source     = "../../modules/app_and_db"
+module "app" {
+  source     = "../../modules/app"
   enviroment = "test"
   app_instances = 1
+}
+
+module "database" {
+  source     = "../../modules/database"
 }

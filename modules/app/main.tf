@@ -6,10 +6,6 @@ terraform {
     docker = {
       source = "kreuzwerker/docker"
     }
-    mysql = {
-      source = "winebarrel/mysql"
-      version = "1.9.0-p6"
-    }
   }
 }
 
@@ -34,7 +30,7 @@ resource "docker_container" "app" {
     external = 9967
   }
   networks_advanced {
-    name = docker_network.private_network.id
+    name = "petclinic-network"
   }
 }
 
