@@ -1,23 +1,6 @@
 variable enviroment{}
 variable app_instances{}
 
-terraform {
-  required_providers {
-    docker = {
-      source = "kreuzwerker/docker"
-    }
-  }
-}
-
-provider "docker" {
-  host = "unix:///var/run/docker.sock"
-}
-
-resource "docker_network" "private_network" {
-  name = "petclinic-network"
-}
-
-
 resource "docker_image" "app_image" {
   name = "snahider/devopslab-pet-clinic:production-latest"
 }
