@@ -1,4 +1,3 @@
-variable enviroment{}
 variable app_instances{}
 
 resource "docker_image" "app_image" {
