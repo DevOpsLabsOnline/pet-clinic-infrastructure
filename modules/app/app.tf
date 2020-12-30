@@ -35,10 +35,6 @@ resource "docker_container" "app" {
 #   networks_advanced {
 #     name = "petclinic-network"
 #   }
-#   labels{
-#     label = "traefik.frontend.rule"
-#     value = "PathPrefix:/"
-#   }
 # }
 
 resource "docker_image" "loadbalancer" {
