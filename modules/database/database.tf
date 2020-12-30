@@ -8,6 +8,7 @@ terraform {
 
 resource "docker_image" "mysql" {
   name = "mysql:8"
+  keep_locally = "true"
 }
 
 resource "random_password" "mysql_root_password" {
