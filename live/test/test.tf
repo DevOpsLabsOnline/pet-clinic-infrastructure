@@ -11,21 +11,16 @@ provider "docker" {
 }
 
 module "base" {
-  source     = "../../modules/base_infra"
+  source     = "../../modules/base"
 }
 
 module "database" {
   source     = "../../modules/database"
-  depends_on = [
-    module.base,
-  ]
+  depends_on = [module.base]
 }
 
 module "app" {
   source     = "../../modules/app"
-  enviroment = "test"
   app_instances = 1
-  depends_on = [
-    module.database,
-  ]
+  depends_on = [module.database]
 }

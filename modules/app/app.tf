@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    docker = {
+      source = "kreuzwerker/docker"
+    }
+  }
+}
+
 variable app_instances{}
 
 resource "docker_image" "app_image" {
@@ -14,6 +22,32 @@ resource "docker_container" "app" {
   networks_advanced {
     name = "petclinic-network"
   }
+  labels{
+    label = "traefik.frontend.rule"
+    value = "PathPrefix:/"
+  }
+}
+
+resource "docker_image" "loadbalancer" {
+  name = "traefik:v1.7"
+}
+
+resource "docker_container" "loadbalancer" {
+  count = var.app_instances > 1 ? 1 : 0
+  name = "loadbalancer"
+  image = docker_image.loadbalancer.latest
+  ports {
+    internal = 80
+    external = 80
+  }
+  volumes {
+    from_container = "/var/run/docker.sock"
+    host_path = "/var/run/docker.sock"
+  }
+  networks_advanced {
+    name = "petclinic-network"
+  }
+  command = ["--docker"]
 }
 
 # resource "docker_container" "nginx-server" {
