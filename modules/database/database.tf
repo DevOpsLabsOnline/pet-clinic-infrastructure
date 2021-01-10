@@ -15,10 +15,6 @@ resource "random_password" "mysql_root_password" {
   length = 16
 }
 
-output "db_password" {
-  value = random_password.mysql_root_password.result
-}
-
 resource "docker_container" "mysql" {
   name = "mysql"
   image = docker_image.mysql.latest
@@ -43,4 +39,12 @@ resource "docker_container" "mysql" {
   networks_advanced {
     name = "petclinic-network"
   }
+}
+
+output "db_username" {
+  value = "root"
+}
+
+output "db_password" {
+  value = random_password.mysql_root_password.result
 }

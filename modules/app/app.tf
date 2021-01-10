@@ -7,6 +7,8 @@ terraform {
 }
 
 variable app_instances{}
+variable db_username{}
+variable db_password{}
 
 resource "docker_image" "app_image" {
   name = "snahider/devopslab-pet-clinic:production-latest"
@@ -23,6 +25,9 @@ resource "docker_container" "app" {
     label = "traefik.frontend.rule"
     value = "PathPrefix:/"
   }
+  command = ["--spring.profiles.active=mysql",
+             "--spring.datasource.username=${var.db_username}", 
+             "--spring.datasource.password=${var.db_password}"]
 }
 
 # resource "docker_container" "app" {

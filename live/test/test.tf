@@ -22,5 +22,7 @@ module "database" {
 module "app" {
   source     = "../../modules/app"
   app_instances = 1
+  db_username = module.database.output.db_username
+  db_password = module.database.output.db_password
   depends_on = [module.database]
 }
