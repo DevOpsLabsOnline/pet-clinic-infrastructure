@@ -16,13 +16,14 @@ module "base" {
 
 module "database" {
   source     = "../../modules/database"
+  mysql_dump = "/root/mysql_dump"
   depends_on = [module.base]
 }
 
 module "app" {
   source     = "../../modules/app"
   app_instances = 1
-  db_username = module.database.output.db_username
-  db_password = module.database.output.db_password
+  db_username = module.database.db_username
+  db_password = module.database.db_password
   depends_on = [module.database]
 }

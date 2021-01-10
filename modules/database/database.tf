@@ -6,6 +6,8 @@ terraform {
   }
 }
 
+variable mysql_dump{}
+
 resource "docker_image" "mysql" {
   name = "mysql:8"
   keep_locally = "true"
@@ -28,7 +30,7 @@ resource "docker_container" "mysql" {
     type = "bind"
   }
   mounts {
-    source = "~/mysql_dump"
+    source = var.mysql_dump
     target = "/docker-entrypoint-initdb.d"
     type = "bind"
   }
