@@ -32,11 +32,6 @@ resource "docker_container" "mysql" {
     volume_name = docker_volume.mysql_data.name
     container_path = "/var/lib/mysql"
   }
-  # mounts {
-  #   source = "/var/lib/mysql"
-  #   target = "/var/lib/mysql"
-  #   type = "bind"
-  # }
   mounts {
     source = var.mysql_dump
     target = "/docker-entrypoint-initdb.d"

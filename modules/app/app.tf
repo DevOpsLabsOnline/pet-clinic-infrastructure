@@ -34,25 +34,8 @@ resource "docker_container" "app" {
   }
   command = ["--spring.profiles.active=mysql",
              "--spring.datasource.username=${var.db_username}", 
-             "--spring.datasource.password=${var.db_password}",
-             "--spring.datasource.hikari.initialization-fail-timeout=5000"]
+             "--spring.datasource.password=${var.db_password}"]
 }
-
-# resource "docker_container" "app" {
-#   count = var.app_instances
-#   name = "petclinic-${count.index}"
-#   image = docker_image.app_image.latest
-#   ports {
-#     internal = 8080
-#     external = 9967
-#   }
-#   networks_advanced {
-#     name = "petclinic-network"
-#   }
-#   command = ["--spring.profiles.active=mysql",
-#              "--spring.datasource.username=${var.db_username}", 
-#              "--spring.datasource.password=${var.db_password}"]
-# }
 
 resource "docker_image" "loadbalancer" {
   count = var.app_instances > 1 ? 1 : 0
