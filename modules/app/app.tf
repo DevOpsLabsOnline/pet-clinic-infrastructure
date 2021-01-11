@@ -18,13 +18,11 @@ resource "docker_container" "app" {
   count = var.app_instances
   name = "petclinic-${count.index}"
   image = docker_image.app_image.latest
-  dynamic "expose_port" {
+  dynamic "ports" {
     for_each = var.app_instances > 1 ? [] : [1]
     content {
-      ports {
-        internal = 8080
-        external = 9967
-      }
+      internal = 8080
+      external = 9967
     }
   }
   networks_advanced {
@@ -63,7 +61,7 @@ resource "docker_image" "loadbalancer" {
 resource "docker_container" "loadbalancer" {
   count = var.app_instances > 1 ? 1 : 0
   name = "loadbalancer"
-  image = docker_image.loadbalancer.latest
+  image = docker_image.loadbalancer[0].latest
   ports {
     internal = 80
     external = 80
