@@ -34,7 +34,8 @@ resource "docker_container" "app" {
   }
   command = ["--spring.profiles.active=mysql",
              "--spring.datasource.username=${var.db_username}", 
-             "--spring.datasource.password=${var.db_password}"]
+             "--spring.datasource.password=${var.db_password}",
+             "--spring.datasource.hikari.initialization-fail-timeout=5000"]
 }
 
 # resource "docker_container" "app" {
